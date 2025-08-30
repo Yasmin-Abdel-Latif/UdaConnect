@@ -1,5 +1,7 @@
 import grpc
 import requests
+import sys
+sys.path.append("/app")
 from flask import Flask, request, jsonify
 
 from modules.connections import location_connection_pb2
