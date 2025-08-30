@@ -1,0 +1,249 @@
+{
+	"info": {
+		"_postman_id": "cdb8eec7-a278-4ce8-a06d-cc202c23a315",
+		"name": "UdaConnect API Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25068416"
+	},
+	"item": [
+		{
+			"name": "Get All Persons",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/persons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"persons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Person",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Y.Kloub\",\n    \"company\": \"Ejada\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5002/persons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"persons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Locations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5002/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Location",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"person_id\": 1,\r\n    \"latitude\": 24.66099331257685,\r\n    \"longitude\": 46.72289315659583\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Connections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5003/connections",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5003",
+					"path": [
+						"connections"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Connection",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"person_id\": 1,\r\n    \"location_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/connections",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"connections"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST http://localhost:5003/connections \\\r\n  -H \"Content-Type: application/json\" \\\r\n  -d '{\"person_id\": 1, \"location_id\": 1}'"
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger Kafka Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"message\": \"Hello Kafka\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5002/publish",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"publish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gRPC Get Connections",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"person_id\": 1,\n  \"latitude\": 40.0,\n  \"longitude\": -105.0,\n  \"meters\": 500\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5002/gateway/nearby",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"gateway",
+						"nearby"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Locations Proximity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"person_id\": 1,\r\n        \"latitude\": 24.774265,\r\n        \"longitude\": 46.738586,\r\n        \"meters\": 500\r\n      }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5002/locations/proximity",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5002",
+					"path": [
+						"locations",
+						"proximity"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST http://localhost:5002/locations/proximity \\\r\n  -H \"Content-Type: application/json\" \\\r\n  -d '{\r\n        \"person_id\": 1,\r\n        \"latitude\": 24.774265,\r\n        \"longitude\": 46.738586,\r\n        \"meters\": 500\r\n      }'"
+			},
+			"response": []
+		}
+	]
+}

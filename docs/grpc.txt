@@ -1,1 +1,99 @@
-Example gRPC calls using Python and curl
+# gRPC Endpoint Documentation — UdaConnect LocationService
+
+This document explains the gRPC service exposed by the `locations` microservice and how other services (e.g., `connections`) can call it via gRPC.
+
+---
+
+## gRPC Service Definition
+
+### Service: LocationService
+Defined in `location_connection.proto`:
+
+```proto
+service LocationService {
+  rpc SendLocation (LocationMessage) returns (Empty);
+}
+```
+
+- **SendLocation** is a one-way call used by `connections` to send a newly detected location.
+- Implemented by the **locations** microservice.
+
+---
+
+## Message Format
+
+### LocationMessage
+
+```proto
+message LocationMessage {
+  int64 person_id = 1;
+  string creation_time = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+```
+
+- `person_id`: Unique ID of the person detected
+- `creation_time`: ISO 8601 timestamp string (e.g., `"2025-08-30T12:00:00Z"`)
+- `latitude`: Decimal latitude (e.g., `24.774265`)
+- `longitude`: Decimal longitude (e.g., `46.738586`)
+
+### Empty
+
+```proto
+message Empty {}
+```
+
+Used as a response for void return.
+
+---
+
+## Target Endpoint (default)
+
+- Host: `locations-service` (if using Kubernetes)
+- Port: `50051` (default)
+- Full Address: `locations-service:50051`
+
+---
+
+## Sample Python Request
+
+Here’s how the `connections` service sends data to the `locations` gRPC endpoint:
+
+```python
+import grpc
+from modules.connections import location_connection_pb2, location_connection_pb2_grpc
+
+# Create a channel to the service (Kubernetes/Docker DNS name)
+channel = grpc.insecure_channel("locations-service:50051")
+stub = location_connection_pb2_grpc.LocationServiceStub(channel)
+
+# Prepare the request
+location = location_connection_pb2.LocationMessage(
+    person_id=1,
+    creation_time="2025-08-30T14:00:00Z",
+    latitude=24.774265,
+    longitude=46.738586
+)
+
+# Call the RPC
+stub.SendLocation(location)
+```
+
+Replace `"locations-service"` with `"localhost:50051"` if testing locally and running `locations` manually.
+
+---
+
+## Notes
+
+- Ensure the gRPC server in `locations` is running and listening on port 50051.
+- If calling from another container, use the **Kubernetes service name** or **Docker Compose service name** (e.g., `locations-service`).
+- All clients must use the **compiled proto files**:
+  - `location_connection_pb2.py`
+  - `location_connection_pb2_grpc.py`
+
+These are generated using:
+
+```bash
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. location_connection.proto
+```

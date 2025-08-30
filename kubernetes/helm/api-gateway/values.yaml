@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: yasminkloub1994/udaconnect-api-gateway
+  repository: udaconnect-api-gateway
   tag: latest
   pullPolicy: IfNotPresent
 service:

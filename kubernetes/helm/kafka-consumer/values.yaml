@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: yasminkloub1994/udaconnect-kafka-consumer
+  repository: udaconnect-kafka-consumer
   tag: latest
   pullPolicy: IfNotPresent
 service:
