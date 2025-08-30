@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-consumer
+  namespace: argocd
+spec:
+  destination:
+    namespace: udaconnect
+    server: https://kubernetes.default.svc
+  source:
+    path: kubernetes/helm/kafka-consumer
+    repoURL: https://github.com/Yasmin-Abdel-Latif/UdaConnect.git
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

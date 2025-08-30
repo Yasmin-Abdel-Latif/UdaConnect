@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package connections;
+
+message LocationRequest {
+  string person_id = 1;
+  int32 distance = 2;
+}
+
+message NearbyPerson {
+  string person_id = 1;
+  string location_id = 2;
+  string creation_time = 3;
+}
+
+service LocationService {
+  rpc GetNearbyPeople (LocationRequest) returns (NearbyPerson);
+}

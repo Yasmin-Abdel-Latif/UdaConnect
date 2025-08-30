@@ -1,0 +1,150 @@
+{
+  "info": {
+    "name": "UdaConnect API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Persons",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:30001/api/persons",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "30001",
+          "path": [
+            "api",
+            "persons"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Person",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:30001/api/persons",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "30001",
+          "path": [
+            "api",
+            "persons"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Locations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:30002/api/locations",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "30002",
+          "path": [
+            "api",
+            "locations"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get All Connections",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:30003/api/connections",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "30003",
+          "path": [
+            "api",
+            "connections"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Trigger Kafka Event",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Hello Kafka\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:30004/api/publish",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "30004",
+          "path": [
+            "api",
+            "publish"
+          ]
+        }
+      }
+    },
+    {
+      "name": "gRPC Get Connections",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"person_id\": 1,\n  \"latitude\": 40.0,\n  \"longitude\": -105.0,\n  \"meters\": 500\n}"
+        },
+        "url": {
+          "raw": "http://localhost:30000/api/gateway/nearby",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "30000",
+          "path": [
+            "api",
+            "gateway",
+            "nearby"
+          ]
+        }
+      }
+    }
+  ]
+}

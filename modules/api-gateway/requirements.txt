@@ -1,0 +1,8 @@
+flask
+requests
+sqlalchemy
+pydantic
+psycopg2-binary
+kafka-python
+grpcio
+grpcio-tools

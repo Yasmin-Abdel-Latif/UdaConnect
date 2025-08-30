@@ -1,0 +1,75 @@
+UdaConnect Architecture Decisions
+=================================
+
+1. Project Structure
+--------------------
+- The project follows a modular monorepo layout under `modules/` where each microservice is self-contained.
+- All Docker, Kubernetes, Helm, and ArgoCD configurations are centralized in their respective root folders.
+
+2. Microservices
+----------------
+- The application is broken into six microservices:
+  1. persons
+  2. locations
+  3. connections
+  4. kafka-producer
+  5. kafka-consumer
+  6. api-gateway
+
+3. Communication Patterns
+--------------------------
+- REST is used between frontend (API Gateway) and internal services.
+- Kafka is used for asynchronous communication between locations and connections.
+
+4. API Gateway
+--------------
+- The `api-gateway` service is responsible for exposing public endpoints and forwarding requests to internal services.
+- gRPC is used between the API Gateway and connections microservice for `/locations/proximity`.
+
+5. Technology Stack
+-------------------
+- Language: Python 3.x
+- Web framework: Flask
+- ORM: SQLAlchemy
+- Async messaging: Kafka (via Confluent Docker images)
+- Database: PostgreSQL 13
+
+6. gRPC
+-------
+- gRPC is used only where low-latency communication is needed (e.g. proximity check).
+- Protobuf files are stored under `modules/connections/` and compiled to `_pb2.py` and `_pb2_grpc.py`.
+
+7. Containerization
+-------------------
+- Each service has its own `Dockerfile`.
+- Services are run using `docker-compose` for local development.
+
+8. Kubernetes + Helm + ArgoCD
+-----------------------------
+- Each microservice has a Helm chart for Kubernetes deployment.
+- ArgoCD is used for continuous delivery.
+- Kubernetes manifests are templated using Helm.
+
+9. Development Environment
+---------------------------
+- Services expose Flask ports (`5000`, `5001`, etc.) via Docker Compose.
+- `requirements.txt` for dependencies.
+- Volume mounting is avoided to simplify containerized dev experience.
+
+10. Logging & Monitoring
+------------------------
+- Not implemented in this version but Prometheus/Grafana are suggested for monitoring.
+- Logs can be tailed via `docker-compose logs -f <service>`.
+
+11. Limitations
+---------------
+- No user authentication is implemented.
+- No retry mechanism or circuit breakers.
+- No real-time updates or UI.
+
+12. Future Improvements
+-----------------------
+- Add OpenAPI/Swagger documentation.
+- Add Prometheus metrics endpoint.
+- Add unit and integration tests.
+- Improve error handling and input validation.
