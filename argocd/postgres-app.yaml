@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres
+  namespace: argocd  # ArgoCD control namespace
+spec:
+  project: default
+
+  source:
+    repoURL: 'https://github.com/Yasmin-Abdel-Latif/UdaConnect.git'
+    targetRevision: HEAD
+    path: kubernetes/helm/postgres
+
+    helm:
+      releaseName: postgres
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: udaconnect
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
