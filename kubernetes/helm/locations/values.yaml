@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
-  repository: "udaconnect-placeholder"
-  tag: "latest"
+  repository: yasminkloub1994/udaconnect-locations
+  tag: latest
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
