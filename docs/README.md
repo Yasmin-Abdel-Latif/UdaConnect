@@ -21,10 +21,10 @@ docker-compose up --build
 
 Verify services are running:
 
-- Persons: http://localhost:30001/persons
-- Locations: http://localhost:30002/locations
-- Kafka Producer: http://localhost:30003/produce/location
-- API Gateway: http://localhost:30006/locations/proximity
+- Persons: http://localhost:5002/persons
+- Locations: http://localhost:5002/locations
+- Kafka Producer: http://localhost:5002/publish
+- API Gateway: http://localhost:5002/locations/proximity
 
 ## 🧪 Test the Platform
 
