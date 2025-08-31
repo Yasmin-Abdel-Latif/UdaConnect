@@ -4,11 +4,13 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from flask import Flask, request, jsonify
+from flasgger import Swagger
 
 from modules.connections import location_connection_pb2
 from modules.connections import location_connection_pb2_grpc
 
 app = Flask(__name__)
+swagger = Swagger(app)
 
 @app.route("/persons", methods=["GET", "POST"])
 def proxy_persons():

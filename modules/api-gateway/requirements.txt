@@ -1,4 +1,5 @@
 flask
+flasgger
 requests
 sqlalchemy
 pydantic
