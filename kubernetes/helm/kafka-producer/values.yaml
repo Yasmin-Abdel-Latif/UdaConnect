@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: udaconnect-kafka-producer
+  repository: yasminkloub1994/udaconnect-kafka-producer
   tag: latest
   pullPolicy: IfNotPresent
 service:

@@ -1,8 +1,9 @@
 replicaCount: 1
 image:
-  repository: udaconnect-api-gateway
+  repository: yasminkloub1994/udaconnect-api-gateway
   tag: latest
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
-  port: 5002
+  port: 5000
+  

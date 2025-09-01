@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: udaconnect-connections
+  repository: yasminkloub1994/udaconnect-connections
   tag: latest
   pullPolicy: IfNotPresent
 service:

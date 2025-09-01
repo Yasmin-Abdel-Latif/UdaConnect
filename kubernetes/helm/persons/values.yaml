@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: udaconnect-persons
+  repository: yasminkloub1994/udaconnect-persons
   tag: latest
   pullPolicy: IfNotPresent
 service:
