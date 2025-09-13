@@ -6,3 +6,16 @@ image:
 service:
   type: ClusterIP
   port: 5000
+imagePullSecrets: []
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+env:
+  DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
+  KAFKA_BOOTSTRAP_SERVERS: udaconnect-kafka:9092

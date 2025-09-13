@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: udaconnect
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: kafka
+    targetRevision: "*"
+    helm:
+      values: |
+        replicaCount: 1
+        kraft:
+          enabled: true
+        service:
+          ports:
+            client: 9092
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

@@ -1,105 +1,148 @@
-
-version: "3.8"
-
 services:
   postgres:
     image: postgres:13
     container_name: postgres
     environment:
-      - POSTGRES_USER=udaconnect
-      - POSTGRES_PASSWORD=udaconnect
-      - POSTGRES_DB=udaconnect
+    - POSTGRES_USER=udaconnect
+    - POSTGRES_PASSWORD=udaconnect
+    - POSTGRES_DB=udaconnect
     ports:
-      - "5432:5432"
+    - 5432:5432
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-
+    - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U udaconnect -d udaconnect
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
   kafka:
     image: confluentinc/cp-kafka:7.3.0
     container_name: kafka
     ports:
-      - "9092:9092"
+    - 9092:9092
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
     depends_on:
-      - zookeeper
-
+      zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD
+      - bash
+      - -lc
+      - echo > /dev/tcp/127.0.0.1/9092
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    restart: unless-stopped
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
     ports:
-      - "2181:2181"
+    - 2181:2181
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-
+    healthcheck:
+      test:
+      - CMD
+      - bash
+      - -lc
+      - echo > /dev/tcp/127.0.0.1/2181
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
   persons:
     build: ./modules/persons
     container_name: persons
     environment:
-      - FLASK_APP=controller.py
+      FLASK_APP: controller.py
+      DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
     command: python controller.py
     ports:
-      - "5000:5000"
+    - 5000:5000
     depends_on:
-      - postgres
-
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
   locations:
     build: ./modules/locations
     container_name: locations
     environment:
-      - FLASK_APP=controller.py
+      FLASK_APP: controller.py
+      DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
     command: python controller.py
     ports:
-      - "5001:5001"
+    - 5001:5001
     depends_on:
-      - postgres
-
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
   api-gateway:
     build:
       context: ./modules/api-gateway
     volumes:
-      - ./modules/api-gateway:/app
-      - ./modules:/app/modules
+    - ./modules/api-gateway:/app
+    - ./modules:/app/modules
     environment:
-      - FLASK_APP=controller.py
-      - PYTHONPATH=/app
+      FLASK_APP: controller.py
+      PYTHONPATH: /app
+      DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
     command: python controller.py
     ports:
-      - "5002:5002"
+    - 5002:5002
     depends_on:
-      - persons
-      - locations
-      - connections
-
+      persons:
+        condition: service_started
+      locations:
+        condition: service_started
+      connections:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
   kafka-producer:
     build: ./modules/kafka-producer
     container_name: kafka-producer
     command: python controller.py
     depends_on:
-      - kafka
-
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    restart: unless-stopped
   kafka-consumer:
     build: ./modules/kafka-consumer
     container_name: kafka-consumer
     command: python consumer.py
     depends_on:
-      - kafka
-      - postgres
-
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    restart: unless-stopped
   connections:
     build: ./modules/connections
     container_name: connections
     command: python controller.py
     ports:
-      - "5003:5003"
+    - 5003:5003
     depends_on:
-      - postgres
-
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
+    restart: unless-stopped
 volumes:
-  postgres-data:
+  postgres-data: null
