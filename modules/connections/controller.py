@@ -1,10 +1,12 @@
+from flask import Flask
 from flask import Blueprint, request, jsonify
 from database import get_db
 from models import Connection
 from database import Base, engine
 import service, schema
-from flask import Flask
+from flasgger import Swagger
 app = Flask(__name__)
+swagger = Swagger(app)
 Base.metadata.create_all(bind=engine)
 connection_blueprint = Blueprint("connection", __name__)
 

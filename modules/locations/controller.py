@@ -1,10 +1,12 @@
+from flask import Flask
 from flask import Blueprint, request, jsonify
 from sqlalchemy.orm import Session
 import service, schema
 from models import Base
 from database import engine, get_db
-from flask import Flask
+from flasgger import Swagger
 app = Flask(__name__)
+swagger = Swagger(app)
 Base.metadata.create_all(bind=engine)
 bp = Blueprint("locations", __name__, url_prefix="/locations")
 

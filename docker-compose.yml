@@ -6,8 +6,9 @@ services:
     image: postgres:13
     container_name: postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=udaconnect
+      - POSTGRES_PASSWORD=udaconnect
+      - POSTGRES_DB=udaconnect
     ports:
       - "5432:5432"
     volumes:

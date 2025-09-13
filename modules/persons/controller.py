@@ -4,7 +4,9 @@ from models import Person
 from database import Base, engine
 import service, schema
 from flask import Flask
+from flasgger import Swagger
 app = Flask(__name__)
+swagger = Swagger(app)
 Base.metadata.create_all(bind=engine)
 bp = Blueprint('persons', __name__, url_prefix='/persons')
 
