@@ -18,3 +18,10 @@ resources:
 
 env:
   DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
+  PYTHONPATH: "/app"
+  FLASK_RUN_HOST: "0.0.0.0"
+  FLASK_RUN_PORT: "5002"
+  PERSONS_URL: "http://persons:5000"
+  LOCATIONS_URL: "http://locations:5001"
+  CONNECTIONS_URL: "http://connections:5003"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
