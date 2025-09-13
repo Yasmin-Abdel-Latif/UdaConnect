@@ -1,41 +1,29 @@
 # modules/api-gateway/Dockerfile
 FROM python:3.10-slim
 
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONPATH=/app
-
 WORKDIR /app
 
-# 1) Dependencies
-COPY requirements.txt .
+# deps
+COPY modules/api-gateway/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 2) App sources
-COPY controller.py .
-COPY modules/ ./modules/
+# app code
+COPY modules/api-gateway/controller.py /app/
 
-# 3) Make sure Python packages exist (handles missing __init__.py files)
-RUN python - <<'PY'
-import pathlib
-for pkg in ("modules", "modules/connections"):
-    p = pathlib.Path(pkg) / "__init__.py"
-    p.parent.mkdir(parents=True, exist_ok=True)
-    if not p.exists():
-        p.write_text("")
-PY
+# make the Python package layout explicit
+RUN mkdir -p /app/modules/connections \
+ && : > /app/modules/__init__.py \
+ && : > /app/modules/connections/__init__.py
 
-# 4) OPTIONAL: compile any *.proto found under modules/ if they exist
-# (No error if none are present.)
-RUN set -e; \
-  if find modules -type f -name '*.proto' -print -quit | grep -q .; then \
-    pip install --no-cache-dir grpcio grpcio-tools; \
-    for f in $(find modules -type f -name '*.proto'); do \
-      d="$(dirname "$f")"; \
-      python -m grpc_tools.protoc -I"$d" -Imodules \
-        --python_out="$d" --grpc_python_out="$d" "$f"; \
-    done; \
-  fi
+# bring in ONLY the generated gRPC stubs from the connections service
+# (these files already exist in your repo)
+COPY modules/connections/location_connection_pb2.py /app/modules/connections/location_connection_pb2.py
+COPY modules/connections/location_connection_pb2_grpc.py /app/modules/connections/location_connection_pb2_grpc.py
 
-# 5) Default command
+# (optional) if you have any local helpers under modules/api-gateway/modules, copy them too
+# this will overlay without removing what we created above
+COPY modules/api-gateway/modules/ /app/modules/
+
+ENV PYTHONPATH=/app
+EXPOSE 5002
 CMD ["python", "controller.py"]
