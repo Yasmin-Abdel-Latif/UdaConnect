@@ -25,3 +25,12 @@ spec:
           image: '{{ .Values.image.repository }}:{{ default "latest" .Values.image.tag }}'
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["python", "-u", "controller.py"]
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://udaconnect:udaconnect@postgres:5432/udaconnect"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: FLASK_APP
+              value: "controller.py"
+            - name: PYTHONUNBUFFERED
+              value: "1"

@@ -16,5 +16,6 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-env:
-  DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
+envList:
+  - name: DATABASE_URL
+    value: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
