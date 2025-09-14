@@ -89,7 +89,8 @@ services:
     restart: unless-stopped
   api-gateway:
     build:
-      context: ./modules/api-gateway
+      context: .
+      dockerfile: modules/api-gateway/Dockerfile
     volumes:
     - ./modules/api-gateway:/app
     - ./modules:/app/modules
