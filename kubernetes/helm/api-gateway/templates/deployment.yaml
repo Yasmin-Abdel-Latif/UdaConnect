@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: {{ .Chart.Name }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
-  replicas: {{ .Values.replicaCount | default 1 }}
+  replicas: {{ default 1 .Values.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/instance: {{ .Release.Name }}
@@ -22,30 +22,5 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.targetPort | default 5002 }}
-{{- if or .Values.env .Values.envList }}
-          env:
-{{- if .Values.envList }}
-{{ toYaml .Values.envList | nindent 12 }}
-{{- end }}
-{{- range $k, $v := .Values.env }}
-            - name: {{ $k }}
-              value: {{ $v | quote }}
-{{- end }}
-{{- end }}
-{{- with .Values.resources }}
-          resources:
-{{ toYaml . | nindent 12 }}
-{{- end }}
-{{- with .Values.livenessProbe }}
-          livenessProbe:
-{{ toYaml . | nindent 12 }}
-{{- end }}
-{{- with .Values.readinessProbe }}
-          readinessProbe:
-{{ toYaml . | nindent 12 }}
-{{- end }}
+          image: '{{ .Values.image.repository }}:{{ default "latest" .Values.image.tag }}'
+          imagePullPolicy: {{ .Values.image.pullPolicy }}

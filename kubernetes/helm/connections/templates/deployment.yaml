@@ -1,44 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  annotations:
+    argocd.argoproj.io/sync-options: Replace=true
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ default 1 .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
     spec:
-      {{- if .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml .Values.imagePullSecrets | nindent 6 }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          env:
-            {{- range $k, $v := .Values.env }}
-            - name: {{ $k }}
-              value: "{{ $v }}"
-            {{- end }}
-          ports:
-            - containerPort: {{ .Values.service.port }}
-livenessProbe:
-  httpGet:
-    path: /healthz
-    port: {{ .Values.service.port }}
-  initialDelaySeconds: 10
-  periodSeconds: 10
-readinessProbe:
-  httpGet:
-    path: /healthz
-    port: {{ .Values.service.port }}
-  initialDelaySeconds: 5
-  periodSeconds: 5
-
-          command: ["python", "controller.py"]
-          resources:
-            {{- toYaml .Values.resources | nindent 10 }}
+          image: '{{ .Values.image.repository }}:{{ default "latest" .Values.image.tag }}'
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
