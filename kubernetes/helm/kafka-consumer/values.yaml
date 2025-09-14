@@ -19,7 +19,3 @@ resources:
 env:
   DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
   KAFKA_BOOTSTRAP_SERVERS: udaconnect-kafka:9092
-command:
-  - python
-  - -u
-  - controller.py
