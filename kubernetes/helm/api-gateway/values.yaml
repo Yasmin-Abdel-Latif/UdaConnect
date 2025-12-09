@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: yasminkloub1994/udaconnect-api-gateway
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 service:
   type: ClusterIP
   port: 5002

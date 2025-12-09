@@ -24,6 +24,6 @@ COPY modules/connections/location_connection_pb2_grpc.py /app/modules/connection
 # this will overlay without removing what we created above
 COPY modules/api-gateway/modules/ /app/modules/
 
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/app:.
 EXPOSE 5002
 CMD ["python", "controller.py"]

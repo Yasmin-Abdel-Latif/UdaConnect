@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: yasminkloub1994/udaconnect-persons
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 service:
   type: ClusterIP
   port: 5000
@@ -16,6 +16,5 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-envList:
-  - name: DATABASE_URL
-    value: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
+env:
+  DATABASE_URL: postgresql://udaconnect:udaconnect@postgres:5432/udaconnect
