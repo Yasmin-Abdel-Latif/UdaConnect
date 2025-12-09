@@ -34,8 +34,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["python", "-u", "controller.py"]
           env:
-            - name: PYTHONPATH
-              value: "/app:."
             - name: DATABASE_URL
               value: "postgresql://udaconnect:udaconnect@postgres:5432/udaconnect"
             - name: LOG_LEVEL

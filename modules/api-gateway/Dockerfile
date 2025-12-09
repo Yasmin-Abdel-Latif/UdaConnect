@@ -24,6 +24,10 @@ COPY modules/connections/location_connection_pb2_grpc.py /app/modules/connection
 # this will overlay without removing what we created above
 COPY modules/api-gateway/modules/ /app/modules/
 
+# Copy entrypoint script
+COPY modules/api-gateway/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 ENV PYTHONPATH=/app:.
 EXPOSE 5002
-CMD ["python", "controller.py"]
+ENTRYPOINT ["/entrypoint.sh"]
