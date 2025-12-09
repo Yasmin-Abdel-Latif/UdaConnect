@@ -1,13 +1,16 @@
 import grpc
 import requests
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify
 from flasgger import Swagger
-from io import BytesIO
 import json
+import logging
 
 from modules.connections import location_connection_pb2
 from modules.connections import location_connection_pb2_grpc
 from openapi_aggregator import get_aggregated_spec
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -123,8 +126,14 @@ def get_openapi_spec():
             schema:
               type: object
     """
-    spec = get_aggregated_spec()
-    return jsonify(spec)
+    logger.info("Fetching aggregated OpenAPI spec")
+    try:
+        spec = get_aggregated_spec()
+        logger.info(f"Successfully retrieved spec with {len(spec.get('paths', {}))} paths")
+        return jsonify(spec)
+    except Exception as e:
+        logger.error(f"Error fetching spec: {e}", exc_info=True)
+        return {"error": str(e)}, 500
 
 
 @app.route("/swagger-ui", methods=["GET"])

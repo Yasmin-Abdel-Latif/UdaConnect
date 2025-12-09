@@ -8,8 +8,11 @@ and provides a combined view accessible from the API Gateway.
 import requests
 from typing import Dict, List, Any, Optional
 import logging
+from functools import lru_cache
+import time
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 # Downstream service configurations
 DOWNSTREAM_SERVICES = {
@@ -174,11 +177,32 @@ def build_aggregated_spec() -> Dict[str, Any]:
     return aggregated_spec
 
 
+# Cache the spec with a 5-minute TTL to avoid constant re-fetching
+_spec_cache = None
+_spec_cache_time = None
+_CACHE_TTL = 300  # 5 minutes
+
+
 def get_aggregated_spec() -> Dict[str, Any]:
     """
     Get the cached or freshly built aggregated spec.
+    Uses caching to avoid constant re-fetching from downstream services.
     
     Returns:
         Aggregated OpenAPI specification
     """
-    return build_aggregated_spec()
+    global _spec_cache, _spec_cache_time
+    
+    now = time.time()
+    
+    # Return cached spec if it's still fresh
+    if _spec_cache is not None and _spec_cache_time is not None:
+        if now - _spec_cache_time < _CACHE_TTL:
+            logger.debug("Returning cached OpenAPI spec")
+            return _spec_cache
+    
+    logger.info("Building fresh OpenAPI spec (cache miss or expired)")
+    _spec_cache = build_aggregated_spec()
+    _spec_cache_time = now
+    
+    return _spec_cache
