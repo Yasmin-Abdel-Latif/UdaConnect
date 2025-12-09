@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # app code
 COPY modules/api-gateway/controller.py /app/
+COPY modules/api-gateway/openapi_aggregator.py /app/
 
 # make the Python package layout explicit
 RUN mkdir -p /app/modules/connections \
